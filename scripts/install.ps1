@@ -55,6 +55,9 @@ function Install-DesignPipeline {
   if (Get-Command python -ErrorAction SilentlyContinue) {
     Write-Host "`n==> Dependency check"
     & python (Join-Path $dst 'scripts\preflight.py') --skills-root (Join-Path $ClaudeDir 'skills')
+    # Without this the preflight's exit 1 leaks out as the install's own exit code: a caller that
+    # exits with $LASTEXITCODE (GitHub's pwsh wrapper does) reports a good install as failed.
+    $global:LASTEXITCODE = 0
   } else {
     Write-Warning 'no python found; run the preflight by hand'
   }

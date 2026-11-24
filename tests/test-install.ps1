@@ -54,4 +54,4 @@ try {
 }
 
 Write-Host ''
-if ($script:fails -eq 0) { Write-Host 'installer checks passed' } else { Write-Host "$script:fails problem(s) found"; exit 1 }
+if ($script:fails -eq 0) { Write-Host 'installer checks passed'; exit 0 } else { Write-Host "$script:fails problem(s) found"; exit 1 }
