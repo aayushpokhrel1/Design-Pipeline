@@ -60,13 +60,15 @@ def _frontmatter_name(skill_md: Path):
 
 
 def installed_skills(root: Path) -> dict:
-    # rglob, not <root>/<name>/: CI scans cloned upstream repos, whose layouts differ.
+    # rglob, not <root>/<name>/: CI scans cloned upstream repos, whose layouts differ. When a name
+    # appears more than once the shallowest copy wins: upstream impeccable carries test fixtures that
+    # are SKILL.md files named impeccable, deeper than the real skill and without its reference/.
     found = {}
     if not root.is_dir():
         return found
     for skill_md in root.rglob("SKILL.md"):
         name = _frontmatter_name(skill_md)
-        if name and name not in found:
+        if name and (name not in found or len(skill_md.parts) < len(found[name].parts) + 1):
             found[name] = skill_md.parent
     return found
 

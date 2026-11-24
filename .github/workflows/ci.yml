@@ -1,0 +1,66 @@
+name: CI
+
+# Every step here was run locally and seen to pass before it was added. No continue-on-error: a
+# step that cannot fail reads as coverage while gating nothing.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Syntax-check the shell scripts
+        run: bash -n scripts/install.sh tests/test-install.sh
+
+      - name: Unit tests (preflight, check)
+        run: python -m unittest discover -s tests -v
+
+      # The pipeline holds no design knowledge, so its whole value rests on the skills it calls
+      # still existing under the names routing.md uses. Checked against upstream HEAD, not an
+      # allowlist, so a rename upstream turns this red instead of breaking a run mid-way.
+      - name: Clone the upstream skills
+        run: |
+          mkdir upstream
+          git clone --depth 1 https://github.com/pbakaus/impeccable upstream/impeccable
+          git clone --depth 1 https://github.com/emilkowalski/skills upstream/emil
+          git clone --depth 1 https://github.com/nextlevelbuilder/ui-ux-pro-max-skill upstream/ui-ux-pro-max
+
+      - name: Check routing against upstream, and the skill rules
+        run: python scripts/check.py --skills-root upstream
+
+      - name: Installer smoke test
+        run: bash tests/test-install.sh
+
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Parse-check the PowerShell scripts
+        shell: pwsh
+        run: |
+          $failed = $false
+          foreach ($f in @('scripts/install.ps1', 'tests/test-install.ps1')) {
+            $errs = $null; $toks = $null
+            $null = [System.Management.Automation.Language.Parser]::ParseFile((Resolve-Path $f), [ref]$toks, [ref]$errs)
+            if ($errs.Count -gt 0) { Write-Host "::error file=$f::$($errs[0].Message)"; $failed = $true }
+          }
+          if ($failed) { exit 1 }
+
+      # Junctions are the Windows install path and the least exercised code here.
+      - name: Installer smoke test (PowerShell)
+        shell: pwsh
+        run: ./tests/test-install.ps1
+
+      - name: Installer smoke test (Git Bash)
+        shell: bash
+        run: bash tests/test-install.sh
+
+      - name: Unit tests
+        run: python -m unittest discover -s tests -v

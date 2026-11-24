@@ -120,6 +120,16 @@ class PreflightTest(unittest.TestCase):
         self.assertEqual(code, 1)
         self.assertTrue(any(line.startswith("MISSING ui-ux-pro-max/scripts/search.py") for line in lines), lines)
 
+    def test_shallowest_copy_wins(self):
+        # Upstream impeccable carries test fixtures that are SKILL.md files named impeccable,
+        # deeper in the tree than the real skill. The real one is the shallowest.
+        # Both arrangements, so the result cannot depend on the walk order.
+        for fixture_dir, real_dir in (("a", "z"), ("z", "a")):
+            root = self.tmp / f"order-{fixture_dir}"
+            make_skill(root / fixture_dir / "tests" / "fixture", "impeccable")
+            real = make_skill(root / real_dir, "impeccable")
+            self.assertEqual(preflight.installed_skills(root)["impeccable"], real, fixture_dir)
+
     def test_paths_with_spaces(self):
         self.root = self.tmp / "with space" / "skills"
         install_all(self.root)
