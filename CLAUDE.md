@@ -67,8 +67,12 @@ claim where it sits, and cross-check every number against reality rather than tr
 
 ## Project rules
 
-- **Verify:** there is no test suite yet. The first plan adds a check script and CI (see the spec's
-  repo layout). Until then, say plainly that nothing was verified mechanically.
+- **Verify:** `python -m unittest discover -s tests -v`, `python scripts/check.py`,
+  `bash tests/test-install.sh` and `./tests/test-install.ps1`. CI runs them all on Linux and
+  Windows, with the routing check against upstream. The skill's run itself has no mechanical
+  test: say so when a change touches `SKILL.md`'s behaviour.
+- **`references/routing.md` is the only list of skills the pipeline calls.** Add a dependency
+  there, never as a second list in `SKILL.md` or a script.
 - **Never copy content out of impeccable, Emil's skills or ui-ux-pro-max.** Call them by name. A
   copy goes stale and competes with the original. That is the decision the whole design rests on.
 - **Keep the skill invoke-only** (`disable-model-invocation: true`).
