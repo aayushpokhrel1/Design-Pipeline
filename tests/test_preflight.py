@@ -130,6 +130,25 @@ class PreflightTest(unittest.TestCase):
             real = make_skill(root / real_dir, "impeccable")
             self.assertEqual(preflight.installed_skills(root)["impeccable"], real, fixture_dir)
 
+    def test_symlinked_skill_is_found(self):
+        # Skills installed as directory symlinks (common on macOS and Linux). Path.rglob stops
+        # following them on Python 3.13+.
+        real = make_skill(self.tmp / "elsewhere", "gestures")
+        self.root.mkdir()
+        try:
+            (self.root / "gestures").symlink_to(real, target_is_directory=True)
+        except OSError:
+            self.skipTest("this platform refuses symlinks")
+        self.assertIn("gestures", preflight.installed_skills(self.root))
+
+    def test_settings_with_bom(self):
+        # PowerShell 5.1 writes UTF-8 with a BOM.
+        install_all(self.root)
+        self.settings.write_bytes(b"\xef\xbb\xbf" + json.dumps({"skillOverrides": {"gestures": "off"}}).encode())
+        lines, code = self.go()
+        self.assertEqual(code, 1)
+        self.assertTrue(any(line.startswith("DISABLED gestures") for line in lines), lines)
+
     def test_paths_with_spaces(self):
         self.root = self.tmp / "with space" / "skills"
         install_all(self.root)

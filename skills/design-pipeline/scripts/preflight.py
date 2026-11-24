@@ -10,6 +10,7 @@ the run, so the report says which ones.
 """
 import argparse
 import json
+import os
 import re
 import sys
 from pathlib import Path
@@ -63,10 +64,13 @@ def installed_skills(root: Path) -> dict:
     # rglob, not <root>/<name>/: CI scans cloned upstream repos, whose layouts differ. When a name
     # appears more than once the shallowest copy wins: upstream impeccable carries test fixtures that
     # are SKILL.md files named impeccable, deeper than the real skill and without its reference/.
+    # os.walk(followlinks=True), not Path.rglob: from Python 3.13 rglob no longer follows directory
+    # symlinks, and on macOS and Linux skills are often installed as exactly that.
     found = {}
     if not root.is_dir():
         return found
-    for skill_md in root.rglob("SKILL.md"):
+    paths = (Path(d) / "SKILL.md" for d, _, files in os.walk(root, followlinks=True) if "SKILL.md" in files)
+    for skill_md in paths:
         name = _frontmatter_name(skill_md)
         if name and (name not in found or len(skill_md.parts) < len(found[name].parts) + 1):
             found[name] = skill_md.parent
@@ -77,7 +81,8 @@ def disabled_skills(settings: Path):
     # An entry "<name>": "off" hides an installed skill from every session. That is how ten design
     # skills sat installed and invisible for three months, so disk alone is not enough.
     try:
-        data = json.loads(settings.read_text(encoding="utf-8"))
+        # utf-8-sig: PowerShell 5.1 writes settings.json with a BOM, which plain utf-8 rejects.
+        data = json.loads(settings.read_text(encoding="utf-8-sig"))
         overrides = data.get("skillOverrides", {}) or {}
         return {k for k, v in overrides.items() if v == "off"}
     except (OSError, ValueError, AttributeError):

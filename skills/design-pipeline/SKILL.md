@@ -20,8 +20,11 @@ How to call them:
 
 - **Emil's skills** (`review-animations`, `improve-animations`, `apple-design`, `animate`,
   `choreograph`, `gestures`, `emil-design-eng`, `mobile-native`, `break-ui`): invoke by name with a
-  concrete target and question. Several are invoke-only, so name them explicitly. Several greet
-  and wait when called with no question; always give them one.
+  concrete target and question. Several greet and wait when called with no question; always give
+  them one. Some are invoke-only (`disable-model-invocation: true`, `review-animations` among
+  them): those are hidden from you and a Skill call for one fails. For any skill you cannot
+  invoke, Read `$HOME/.claude/skills/<name>/SKILL.md` and follow it as written. Never skip its
+  routing row or substitute another skill.
 - **impeccable**: follow its own `SKILL.md` setup, which runs its `scripts/impeccable context`
   launcher (`impeccable.cmd` on a Windows shell without `sh`), then the command a routing row
   names (`critique`, `layout`, `shape`, `document`...).
@@ -32,8 +35,9 @@ How to call them:
 
 ## The rules that make this the pipeline
 
-1. **No edit to the project before the user approves the fix list** (step 5). Steps 0 to 4 only read,
-   run and ask.
+1. **No edit to the project's code or design before the user approves the fix list** (step 5).
+   Steps 0 to 4 read, run and ask. Tooling files are fine: a `.claude/launch.json` entry to run the
+   page, and the critique snapshots impeccable keeps in `.impeccable/`.
 2. **Never replace a project's identity unless the user asked.** Overhaul is never automatic, and
    in keep-the-direction mode you never recommend it unless the user asked for a new identity.
 3. **In keep-the-direction mode, never propose new colours or fonts**, from ui-ux-pro-max or

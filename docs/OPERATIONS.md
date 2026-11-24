@@ -70,4 +70,9 @@ All are user-level skills in `~/.claude/skills/`. The exact set is whatever `rou
 - **On Windows `python3` is the Microsoft Store stub.** Call `python`.
 - **This checkout converts line endings to CRLF**; `.gitattributes` keeps `*.sh` LF, or bash breaks.
 - **Several of Emil's skills are invoke-only** (`review-animations`, `prototype`, `pick-ui-library`,
-  `learn-taste`), so the model won't pick them up by itself. The pipeline names them explicitly.
+  `learn-taste`). Claude Code hides them from the model, and a Skill call for one fails, so naming
+  them is not enough. `SKILL.md` tells the conductor to Read such a skill's `SKILL.md` and follow it.
+  The preflight still reports them `ok`, because being installed is all it checks.
+- **From Python 3.13, `Path.rglob` does not follow directory symlinks.** Skill discovery uses
+  `os.walk(followlinks=True)`, or symlinked skills on macOS and Linux read as missing.
+- **PowerShell 5.1 writes `settings.json` with a BOM.** The preflight reads it as `utf-8-sig`.
