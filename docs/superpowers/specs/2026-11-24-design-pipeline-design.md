@@ -1,7 +1,7 @@
 # Design Pipeline: design
 
 Status: approved by Aayush on 2026-11-24.
-Next step: an implementation plan (superpowers:writing-plans).
+Built as v1 (approach A) on 2026-11-24; not yet judged on a real project (see Done when).
 
 ## Intent
 
@@ -128,7 +128,8 @@ propose new colours or fonts in keep-the-direction mode.
   - breaks on real data: `break-ui`
   - generic look, weak hierarchy, type or colour: impeccable
   - no direction: impeccable plus the ui-ux-pro-max search
-- `scripts/preflight.*`: the dependency check from step 0.
+- `skills/design-pipeline/scripts/preflight.py`: the dependency check from step 0. Inside the
+  skill, not repo `scripts/`, because only the skill folder is installed.
 - `scripts/install.sh` and `scripts/install.ps1`: link the skill into `~/.claude/skills/`. Mirror
   `scripts/install-scaffold.{sh,ps1}` in Knowledge-Pipeline, including its rule that sourcing the
   installer has no side effects, so it can be tested in a sandbox.

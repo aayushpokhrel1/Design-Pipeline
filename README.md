@@ -14,11 +14,28 @@ in the right order:
 | How it moves and feels | [Emil Kowalski's skills](https://github.com/emilkowalski/skills) | Animation, choreography, gestures, sheets, interaction polish, edge cases |
 | Reference data | [ui-ux-pro-max](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) | A searchable local database of styles, palettes, font pairings, UX guidelines and stack notes |
 
+## Install
+
+```bash
+git clone https://github.com/aayushpokhrel1/Design-Pipeline
+cd Design-Pipeline
+bash scripts/install.sh        # or, in PowerShell: ./scripts/install.ps1
+```
+
+This links `skills/design-pipeline/` into `~/.claude/skills/`, so a `git pull` updates the
+installed skill. It then runs a dependency check that lists any design skill that is missing or
+switched off, and which part of a run that limits. Then, in Claude Code, from the project you want
+to upgrade:
+
+```
+/design-pipeline
+```
+
 ## Status
 
-Design stage. The design is in
+v1 (one conductor skill). The design is in
 [`docs/superpowers/specs/2026-11-24-design-pipeline-design.md`](docs/superpowers/specs/2026-11-24-design-pipeline-design.md).
-Nothing is installable yet.
+It has not yet been judged on a real project.
 
 ## How a run goes
 
