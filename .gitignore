@@ -1,0 +1,10 @@
+# Session handover (local-only, this machine): current state only, nothing durable
+HANDOVER.md
+
+# Knowledge graph cache (rebuilt by the graphify post-commit hook)
+graphify-out/
+
+# Public repo: product truth and plans stay local; the canonical copies live in the vault
+# (Knowledge-Vault/Projects/Design-Pipeline/)
+PRODUCT.md
+docs/superpowers/plans/
