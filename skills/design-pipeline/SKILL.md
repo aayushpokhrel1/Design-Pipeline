@@ -38,8 +38,8 @@ How to call them:
 1. **No edit to the project's code or design before the user approves the fix list** (step 5).
    Steps 0 to 4 read, run and ask. Tooling files are fine: a `.claude/launch.json` entry to run the
    page, and the critique snapshots impeccable keeps in `.impeccable/`.
-2. **Never replace a project's identity unless the user asked.** Overhaul is never automatic, and
-   in keep-the-direction mode you never recommend it unless the user asked for a new identity.
+2. **Never replace a project's identity unless the user asked.** Overhaul is never automatic. The
+   user asks by answering step 3's first question: a design they don't like is the request.
 3. **In keep-the-direction mode, never propose new colours or fonts**, from ui-ux-pro-max or
    anywhere else. Its styles, palettes and font pairings are for finding a direction only.
 4. **Ask about the project, never "which skill do you want?"** Choosing skills is your job.
@@ -58,11 +58,14 @@ in `~/.claude/settings.json` switches the skill off; tell the user that is the f
 ## Step 1: Read the project
 
 Find the stack, the pages or routes, how to run it, and whether a design system exists:
-`DESIGN.md`, a tokens file, a theme file, CSS custom properties used as tokens. Then state the mode
-and why:
+`DESIGN.md`, a tokens file, a theme file, CSS custom properties used as tokens. Then state a
+**provisional** mode and why:
 
 - **Keep the direction**: a design system exists. Its rules are what step 3 protects.
 - **Find a direction**: none exists, or what exists is a framework default nobody chose.
+
+The code can only show that a system exists, not that the user still wants it. Step 3's first
+question confirms or changes the mode.
 
 ## Step 2: Critique
 
@@ -102,12 +105,17 @@ duplicates folded together. Show it to the user, grouped by layer, highest sever
 
 Ask one question at a time, and wait for each answer:
 
-1. What should someone feel in the first ten seconds of using it? Three words is enough.
-2. What must not change? In keep-the-direction mode, list `DESIGN.md`'s rules (or the tokens you
+1. **Do you like how it looks and feels now?** Ask this first, every run, with screenshots of the
+   main routes from step 2 and the findings table beside them. Offer three answers: keep it and
+   fix what's off; keep the core but refresh it; or no, I want something new. The answer sets the
+   mode: the first two keep the direction, the third switches to find a direction, whatever step 1
+   found. Never argue the user out of a new direction, and never talk them into one.
+2. What should someone feel in the first ten seconds of using it? Three words is enough.
+3. What must not change? In keep-the-direction mode, list `DESIGN.md`'s rules (or the tokens you
    found) as the protected list and ask what to add to it.
-3. Who uses it most, and on what device?
+4. Who uses it most, and on what device?
 
-Skip a question the project already answers (a `PRODUCT.md` that names the audience, say), and say
+Question 1 is never skipped. Skip any other question the project already answers (a `PRODUCT.md` that names the audience, say), and say
 that you skipped it and why.
 
 ## Step 4: Recommend a level
@@ -120,7 +128,9 @@ Recommend one level with reasons drawn from the findings and the answers. The us
 | Refresh | The system has gaps or weak sections (no motion rules, a weak type scale) | `DESIGN.md` gains or sharpens sections, then the code follows |
 | Overhaul | Really bad or generic | New direction, `DESIGN.md` rewritten, applied across the pages |
 
-In find-a-direction mode, an Overhaul or Refresh starts from a direction: run the `no direction`
+Recommend Overhaul only in find-a-direction mode, which in a project with a design system means
+the user answered "something new" to question 1. In find-a-direction mode, an Overhaul or Refresh
+starts from a direction: run the `no direction`
 Fix row (impeccable's `shape`, with ui-ux-pro-max searches for candidate styles, palettes and font
 pairings) and let the user choose before step 5.
 
