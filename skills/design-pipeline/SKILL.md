@@ -138,8 +138,9 @@ happens when it is interrupted) is what the run is for.
 `$HOME/.claude/bin/delegate` exists, ask the user once, with the list: should the approved items
 be orchestrated? Say what that means: each skill still runs in full here and decides the change,
 but the edits are written by a cheaper model through the delegation pipeline and reviewed here, so
-fewer Claude tokens go on typing code. The judgment, the review and the browser checks still cost
-Claude tokens. If the user says no, or `delegate` is not installed, apply everything here.
+fewer Claude tokens go on typing code. A yes covers the whole run: which items go to the worker is
+your call per item in step 6, not a question for the user. If the user says no, or `delegate` is
+not installed, apply everything here.
 
 Stop here. **Do not edit anything until the user approves the list.** They may drop or reorder
 items; the approved list is the contract for step 6.
@@ -148,8 +149,12 @@ items; the approved list is the contract for step 6.
 
 Run each approved item's skill on its target, in order. Respect the protected list from step 3.
 
-If the user chose orchestration, for each item: run its skill in full here and settle the change;
-write that change as a self-contained brief (the files, the exact values the skill chose, what done
+If the user chose orchestration, decide per item, after its skill has run in full here and settled
+the change, whether the edit goes to the worker. The gate is cost, not size alone: if writing the
+brief and reviewing the diff would cost about as much as making the edit yourself (a one-line
+value, a single selector), make it here; anything bulkier than its own description, from a few
+files to a sweep across forty, goes to the worker. Say in one line which way each item went. For
+an item that goes: write the change as a self-contained brief (the files, the exact values the skill chose, what done
 looks like), since the worker sees nothing of this conversation; hand it to the delegation pipeline,
 through its `orchestrate` skill when that is installed, otherwise
 `"$HOME/.claude/bin/delegate" "<brief>"`; then read the `git diff` yourself before the browser
