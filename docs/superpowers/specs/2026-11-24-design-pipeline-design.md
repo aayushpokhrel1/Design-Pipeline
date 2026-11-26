@@ -1,7 +1,8 @@
 # Design Pipeline: design
 
 Status: approved by Aayush on 2026-11-24.
-Built as v1 (approach A) on 2026-11-24; not yet judged on a real project (see Done when).
+Built as v1 (approach A) on 2026-11-24. First real run on Portfolio on 2026-11-26 (see Done
+when); EnamelVault not yet run.
 
 ## Intent
 
@@ -80,16 +81,20 @@ the need is.
    `skillOverrides` in `~/.claude/settings.json` can switch an installed skill off silently).
    Report anything missing, and say which phases it limits instead of failing outright.
 1. **Read the project.** Find the stack, the pages or routes, how to run it, and whether a design
-   system exists (`DESIGN.md`, tokens, a theme file). The answer sets the mode: **find a
-   direction** or **keep the direction**.
+   system exists (`DESIGN.md`, tokens, a theme file). The answer sets a provisional mode: **find
+   a direction** or **keep the direction**. Step 3 confirms it.
 2. **Critique.** Run the existing skills' review modes: impeccable's critique for the look;
    `improve-animations`, `review-animations` and `apple-design` for the feel. Open the page in a
    browser where it can run (the built-in browser), so transitions are judged in motion. Collect
    the results as **one list of findings** in a shared format: finding, evidence, severity, layer
    (look, feel or robustness) and the skill that would fix it. Approach B only changes who produces
    this list, so keep the format stable.
-3. **Ask** the user a few questions about the project. These cover what it should make people feel,
-   what must be kept, and how far to go. In keep-the-direction mode, the protected parts are
+3. **Ask** the user a few questions about the project. The first, asked every run, is whether they
+   like the current design; "no, something new" switches to find a direction even when a design
+   system exists, which is how an Overhaul becomes possible on such a project. (Added 2026-11-26
+   after the first real run: a mode set from code alone could never reach an Overhaul on a project
+   with chosen tokens.) The rest cover what it should make people feel, what must be kept, and how
+   far to go. In keep-the-direction mode, the protected parts are
    `DESIGN.md`'s rules.
 4. **Recommend a level** with reasons, and the user picks:
 
@@ -143,8 +148,10 @@ propose new colours or fonts in keep-the-direction mode.
   shell without `sh`) and reads the target project's `PRODUCT.md` and `DESIGN.md`.
 - How to start each kind of project for the browser pass (a static folder, Vite's dev server).
 - The findings format's field names.
-- Whether mechanical follow-through on an approved item (say, renaming a token across forty files)
-  goes to the delegation pipeline. Design judgment stays in-session.
+- ~~Whether mechanical follow-through goes to the delegation pipeline.~~ Decided 2026-11-26: when
+  it is installed, step 5 offers to orchestrate, and the conductor then decides per item by cost
+  (brief plus review against doing it inline). Every item's skill still runs in full in-session;
+  design judgment never goes to the worker.
 
 ## Done when
 

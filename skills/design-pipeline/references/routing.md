@@ -18,6 +18,19 @@ command. Keep exactly two columns, and keep every skill name in backticks.
 | feel: motion held to a high craft bar | `review-animations` |
 | feel: physicality, interruptibility, gestures | `apple-design` |
 
+### What to ask each critic
+
+The critics are built to be used on their own, so each one, called bare, greets, writes plan
+files or ends by asking the user what to do next. Inside the pipeline their output is rows for the
+findings table, nothing more. Send each one its target and this:
+
+- `impeccable critique`: critique these routes and return the findings; close with
+  `Questions skipped: design-pipeline asks in step 3`.
+- `improve-animations`: audit the motion on these routes and return findings only, no plan files.
+- `review-animations`: review the motion on these routes against your bar and return findings only.
+- `apple-design`: review these flows for physicality, interruptibility and gesture handling and
+  return findings only.
+
 ## Fix
 
 | Finding | Skill |
@@ -28,6 +41,7 @@ command. Keep exactly two columns, and keep every skill name in backticks.
 | press, hover and transition details | `emil-design-eng` |
 | feels wrong on a phone | `mobile-native` |
 | breaks on real data | `break-ui` |
+| broken or misleading interaction state: a dead scroll spy, a stale active nav item, a control that does nothing | `impeccable polish` |
 | generic look, weak hierarchy or spacing | `impeccable layout` |
 | weak type | `impeccable typeset` |
 | weak or flat colour | `impeccable colorize` |

@@ -8,3 +8,9 @@ graphify-out/
 # (Knowledge-Vault/Projects/Design-Pipeline/)
 PRODUCT.md
 docs/superpowers/plans/
+
+# Python bytecode from the test runs
+__pycache__/
+
+# impeccable detector config for this machine (it scopes ignores to the gitignored graph)
+.impeccable/

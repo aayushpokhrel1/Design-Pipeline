@@ -35,7 +35,8 @@ to upgrade:
 
 v1 (one conductor skill). The design is in
 [`docs/superpowers/specs/2026-11-24-design-pipeline-design.md`](docs/superpowers/specs/2026-11-24-design-pipeline-design.md).
-It has not yet been judged on a real project.
+It has had one real run, on a static portfolio site, and the skill was revised from what that run
+showed. A run on a React app with its own design system is next.
 
 ## How a run goes
 
@@ -43,8 +44,9 @@ It has not yet been judged on a real project.
    tokens).
 2. **Critique** the look and the feel, in a real browser where possible, so transitions and
    motion get judged, not just screenshots.
-3. **Ask** a few questions about the project: what it should make people feel, what to protect,
-   how far to go.
+3. **Ask** a few questions about the project, starting with whether you like how it looks now.
+   That answer decides whether it keeps your direction or helps you find a new one. Then: what it
+   should make people feel, what to protect, and who uses it.
 4. **Recommend a level**, which you pick:
    - **Polish**: fix the execution and keep `DESIGN.md`.
    - **Refresh**: sharpen `DESIGN.md`'s weak sections, then fix the code.
@@ -67,3 +69,7 @@ It has not yet been judged on a real project.
 
 [Claude Code](https://claude.com/claude-code), with impeccable, Emil Kowalski's skills and
 ui-ux-pro-max installed as user-level skills, and Python for the ui-ux-pro-max search script.
+
+Optional: with the [delegation pipeline](https://github.com/aayushpokhrel1/delegation-pipeline)
+installed, the pipeline offers to hand the approved edits to a cheaper model. The design skills
+still decide every change in your session, and the session reviews each diff.

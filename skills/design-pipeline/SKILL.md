@@ -38,8 +38,8 @@ How to call them:
 1. **No edit to the project's code or design before the user approves the fix list** (step 5).
    Steps 0 to 4 read, run and ask. Tooling files are fine: a `.claude/launch.json` entry to run the
    page, and the critique snapshots impeccable keeps in `.impeccable/`.
-2. **Never replace a project's identity unless the user asked.** Overhaul is never automatic, and
-   in keep-the-direction mode you never recommend it unless the user asked for a new identity.
+2. **Never replace a project's identity unless the user asked.** Overhaul is never automatic. The
+   user asks by answering step 3's first question: a design they don't like is the request.
 3. **In keep-the-direction mode, never propose new colours or fonts**, from ui-ux-pro-max or
    anywhere else. Its styles, palettes and font pairings are for finding a direction only.
 4. **Ask about the project, never "which skill do you want?"** Choosing skills is your job.
@@ -58,15 +58,25 @@ in `~/.claude/settings.json` switches the skill off; tell the user that is the f
 ## Step 1: Read the project
 
 Find the stack, the pages or routes, how to run it, and whether a design system exists:
-`DESIGN.md`, a tokens file, a theme file, CSS custom properties used as tokens. Then state the mode
-and why:
+`DESIGN.md`, a tokens file, a theme file, CSS custom properties used as tokens. Then state a
+**provisional** mode and why:
 
 - **Keep the direction**: a design system exists. Its rules are what step 3 protects.
 - **Find a direction**: none exists, or what exists is a framework default nobody chose.
 
+The code can only show that a system exists, not that the user still wants it. Step 3's first
+question confirms or changes the mode.
+
 ## Step 2: Critique
 
-Run every Critique row in `routing.md` against the project's main routes.
+Run every Critique row in `routing.md` against the project's main routes, sending each critic the
+question `routing.md` gives for it.
+
+**Run impeccable's critique the way it specifies: its two assessments in two isolated subagents.**
+Do not fold them into one context to save tokens, even where the user's own instructions favour
+fewer subagents; that is a decided exception, because the critique is the input every later step
+rests on. Its single-context "degraded" run is only for a harness with no subagent tool, and then
+it carries impeccable's banner.
 
 **Judge feel from the running page**, not only from code or a still screenshot. Start it for the
 built-in browser:
@@ -76,12 +86,17 @@ built-in browser:
   open it with `preview_start`;
 - anything else: ask the user how they run it.
 
+**Make the browser pane visible before judging any motion.** A hidden pane runs the page as a
+background tab, which throttles `requestAnimationFrame`, IntersectionObserver and View
+Transitions: animations stall, screenshots show nothing moving, and timing loops time out. If
+the browser's tab listing says the pane is hidden, show it first.
+
 Click through the main flows in the browser (open an item, go back, open a menu or sheet, submit a
 form) and note every hard cut, jump and dead moment. If the page cannot run, say plainly that feel
 was judged from code only.
 
 When a called skill ends by asking the user what to do next, its question belongs to this
-pipeline: for impeccable's critique, close with `Questions skipped: design-pipeline asks in step 3`.
+pipeline, which asks in step 3.
 
 Merge everything into **one** findings table in the format of `references/findings.md`, with
 duplicates folded together. Show it to the user, grouped by layer, highest severity first.
@@ -90,12 +105,17 @@ duplicates folded together. Show it to the user, grouped by layer, highest sever
 
 Ask one question at a time, and wait for each answer:
 
-1. What should someone feel in the first ten seconds of using it? Three words is enough.
-2. What must not change? In keep-the-direction mode, list `DESIGN.md`'s rules (or the tokens you
+1. **Do you like how it looks and feels now?** Ask this first, every run, with screenshots of the
+   main routes from step 2 and the findings table beside them. Offer three answers: keep it and
+   fix what's off; keep the core but refresh it; or no, I want something new. The answer sets the
+   mode: the first two keep the direction, the third switches to find a direction, whatever step 1
+   found. Never argue the user out of a new direction, and never talk them into one.
+2. What should someone feel in the first ten seconds of using it? Three words is enough.
+3. What must not change? In keep-the-direction mode, list `DESIGN.md`'s rules (or the tokens you
    found) as the protected list and ask what to add to it.
-3. Who uses it most, and on what device?
+4. Who uses it most, and on what device?
 
-Skip a question the project already answers (a `PRODUCT.md` that names the audience, say), and say
+Question 1 is never skipped. Skip any other question the project already answers (a `PRODUCT.md` that names the audience, say), and say
 that you skipped it and why.
 
 ## Step 4: Recommend a level
@@ -108,7 +128,9 @@ Recommend one level with reasons drawn from the findings and the answers. The us
 | Refresh | The system has gaps or weak sections (no motion rules, a weak type scale) | `DESIGN.md` gains or sharpens sections, then the code follows |
 | Overhaul | Really bad or generic | New direction, `DESIGN.md` rewritten, applied across the pages |
 
-In find-a-direction mode, an Overhaul or Refresh starts from a direction: run the `no direction`
+Recommend Overhaul only in find-a-direction mode, which in a project with a design system means
+the user answered "something new" to question 1. In find-a-direction mode, an Overhaul or Refresh
+starts from a direction: run the `no direction`
 Fix row (impeccable's `shape`, with ui-ux-pro-max searches for candidate styles, palettes and font
 pairings) and let the user choose before step 5.
 
@@ -118,27 +140,66 @@ Write an ordered fix list. Each item names the findings it closes and its `fix-w
 **Look and structure come before motion**: motion tuned on a layout that then changes is wasted.
 Findings marked `none` go at the end as open questions.
 
+Every item runs its skill in full. Do not shortcut a skill by reading its values and applying
+them yourself: the skill's judgment (should this move at all, what about reduced motion, what
+happens when it is interrupted) is what the run is for.
+
+**Offer to orchestrate, when the delegation pipeline is installed.** If
+`$HOME/.claude/bin/delegate` exists, ask the user once, with the list: should the approved items
+be orchestrated? Say what that means: each skill still runs in full here and decides the change,
+but the edits are written by a cheaper model through the delegation pipeline and reviewed here, so
+fewer Claude tokens go on typing code. A yes covers the whole run: which items go to the worker is
+your call per item in step 6, not a question for the user. If the user says no, or `delegate` is
+not installed, apply everything here.
+
 Stop here. **Do not edit anything until the user approves the list.** They may drop or reorder
 items; the approved list is the contract for step 6.
 
 ## Step 6: Apply
 
 Run each approved item's skill on its target, in order. Respect the protected list from step 3.
+
+If the user chose orchestration, decide per item, after its skill has run in full here and settled
+the change, whether the edit goes to the worker. The gate is cost, not size alone: if writing the
+brief and reviewing the diff would cost about as much as making the edit yourself (a one-line
+value, a single selector), make it here; anything bulkier than its own description, from a few
+files to a sweep across forty, goes to the worker. Say in one line which way each item went. For
+an item that goes: write the change as a self-contained brief (the files, the exact values the skill chose, what done
+looks like), since the worker sees nothing of this conversation; hand it to the delegation pipeline,
+through its `orchestrate` skill when that is installed, otherwise
+`"$HOME/.claude/bin/delegate" "<brief>"`; then read the `git diff` yourself before the browser
+check. A diff that drifts from what the skill decided is redone, not accepted. Design decisions
+never go to the worker: if a brief would need the worker to choose, the item is applied here.
+
 After each item, check the page still runs before starting the next.
 
-Mechanical follow-through on an approved item, such as renaming a token across many files, may go
-to the delegation pipeline when `$HOME/.claude/bin/delegate` exists. Design judgment stays here.
+**Reload past the cache after every item.** A static server such as `python -m http.server` lets
+the browser keep serving old CSS and JS, so a check can pass or fail against files you already
+changed. In the page, `fetch` each changed asset with `{cache: 'reload'}`, then reload, and
+confirm the change is in what the browser now has before judging it.
 
 ## Step 7: Check
 
 Run every Check row in `routing.md` on what changed, except the `DESIGN.md` row, which is step 8:
 `break-ui` on the changed components, a second critique pass on the changed routes. Take before and
-after screenshots of each changed route in the browser. Fix what the check finds in the same
+after screenshots of each changed route in the browser.
+
+`break-ui` expects a data boundary and a dev-only fixture toggle. A static site has neither: there,
+feed the worst-case values straight into the rendered page in the browser (long names, wrapping
+labels, missing images) at a 320px viewport, and add no toggle to the project. Those edits live in
+the browser only. Fix what the check finds in the same
 scope, or report it; do not widen the scope without asking.
 
 ## Step 8: DESIGN.md
 
 impeccable owns the format of `DESIGN.md`. Do not invent a second one.
+
+Before writing it, run `git check-ignore -q DESIGN.md` in the project. If it is ignored, tell the
+user: a `DESIGN.md` nobody else can see does not keep the direction for the next run. Ask whether
+to un-ignore it; do not edit `.gitignore` on your own.
+
+Give impeccable the step 3 answers, and the protected list, as already answered, so its own
+questions skip what the user has said once. Ask only what is still open.
 
 - **Find a direction**: have impeccable's `document` command create it from the finished build.
 - **Refresh or Overhaul**: have impeccable update the sections that changed. Motion rules from
