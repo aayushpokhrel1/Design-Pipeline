@@ -67,3 +67,7 @@ It has not yet been judged on a real project.
 
 [Claude Code](https://claude.com/claude-code), with impeccable, Emil Kowalski's skills and
 ui-ux-pro-max installed as user-level skills, and Python for the ui-ux-pro-max search script.
+
+Optional: with the [delegation pipeline](https://github.com/aayushpokhrel1/delegation-pipeline)
+installed, the pipeline offers to hand the approved edits to a cheaper model. The design skills
+still decide every change in your session, and the session reviews each diff.

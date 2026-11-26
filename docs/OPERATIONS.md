@@ -55,6 +55,12 @@ All are user-level skills in `~/.claude/skills/`. The exact set is whatever `rou
 | Emil Kowalski's skills | github.com/emilkowalski/skills | The feel: `review-animations`, `improve-animations`, `apple-design`, `animate`, `choreograph`, `gestures`, `emil-design-eng`, `mobile-native`, `break-ui` |
 | ui-ux-pro-max | github.com/nextlevelbuilder/ui-ux-pro-max-skill | The reference database, through `scripts/search.py` |
 
+Optional: the [delegation pipeline](https://github.com/aayushpokhrel1/delegation-pipeline). When
+`~/.claude/bin/delegate` exists, step 5 offers to orchestrate the approved fixes: each skill still
+runs in full in the session and decides the change, and a cheaper model writes the edit, which the
+session reviews. It is not in `routing.md` because nothing is limited without it, so the preflight
+does not report it.
+
 ## Environment traps
 
 - **`skillOverrides` can silently switch an installed skill off.** An entry `"<name>": "off"` in

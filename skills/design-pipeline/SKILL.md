@@ -130,33 +130,38 @@ Write an ordered fix list. Each item names the findings it closes and its `fix-w
 **Look and structure come before motion**: motion tuned on a layout that then changes is wasted.
 Findings marked `none` go at the end as open questions.
 
-Mark each item `full` or `values-only`, and show the mark in the list the user approves:
+Every item runs its skill in full. Do not shortcut a skill by reading its values and applying
+them yourself: the skill's judgment (should this move at all, what about reduced motion, what
+happens when it is interrupted) is what the run is for.
 
-- `full` (the default): run the skill end to end. Any item that decides whether something moves,
-  what moves, or how it behaves when interrupted is `full`, as is anything new starting to animate.
-- `values-only`: the item already fixes what changes and how, and only needs the skill's numbers
-  (a curve, a duration, a threshold, a `touch-action` value) applied to approved code. Read those
-  values from the skill's own `SKILL.md` at that moment, never from memory or an earlier run.
-
-The user can flip any mark. You never change one after approval.
+**Offer to orchestrate, when the delegation pipeline is installed.** If
+`$HOME/.claude/bin/delegate` exists, ask the user once, with the list: should the approved items
+be orchestrated? Say what that means: each skill still runs in full here and decides the change,
+but the edits are written by a cheaper model through the delegation pipeline and reviewed here, so
+fewer Claude tokens go on typing code. The judgment, the review and the browser checks still cost
+Claude tokens. If the user says no, or `delegate` is not installed, apply everything here.
 
 Stop here. **Do not edit anything until the user approves the list.** They may drop or reorder
 items; the approved list is the contract for step 6.
 
 ## Step 6: Apply
 
-Run each approved item's skill on its target, in order, as its mark says. Respect the protected
-list from step 3. If a `values-only` item turns out to need a decision, stop that item and ask the
-user to make it `full`; do not decide it yourself.
+Run each approved item's skill on its target, in order. Respect the protected list from step 3.
+
+If the user chose orchestration, for each item: run its skill in full here and settle the change;
+write that change as a self-contained brief (the files, the exact values the skill chose, what done
+looks like), since the worker sees nothing of this conversation; hand it to the delegation pipeline,
+through its `orchestrate` skill when that is installed, otherwise
+`"$HOME/.claude/bin/delegate" "<brief>"`; then read the `git diff` yourself before the browser
+check. A diff that drifts from what the skill decided is redone, not accepted. Design decisions
+never go to the worker: if a brief would need the worker to choose, the item is applied here.
+
 After each item, check the page still runs before starting the next.
 
 **Reload past the cache after every item.** A static server such as `python -m http.server` lets
 the browser keep serving old CSS and JS, so a check can pass or fail against files you already
 changed. In the page, `fetch` each changed asset with `{cache: 'reload'}`, then reload, and
 confirm the change is in what the browser now has before judging it.
-
-Mechanical follow-through on an approved item, such as renaming a token across many files, may go
-to the delegation pipeline when `$HOME/.claude/bin/delegate` exists. Design judgment stays here.
 
 ## Step 7: Check
 
