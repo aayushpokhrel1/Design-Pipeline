@@ -1,7 +1,8 @@
 # Design Pipeline: design
 
 Status: approved by Aayush on 2026-11-24.
-Built as v1 (approach A) on 2026-11-24; not yet judged on a real project (see Done when).
+Built as v1 (approach A) on 2026-11-24. First real run on Portfolio on 2026-11-26 (see Done
+when); EnamelVault not yet run.
 
 ## Intent
 
@@ -147,8 +148,10 @@ propose new colours or fonts in keep-the-direction mode.
   shell without `sh`) and reads the target project's `PRODUCT.md` and `DESIGN.md`.
 - How to start each kind of project for the browser pass (a static folder, Vite's dev server).
 - The findings format's field names.
-- Whether mechanical follow-through on an approved item (say, renaming a token across forty files)
-  goes to the delegation pipeline. Design judgment stays in-session.
+- ~~Whether mechanical follow-through goes to the delegation pipeline.~~ Decided 2026-11-26: when
+  it is installed, step 5 offers to orchestrate, and the conductor then decides per item by cost
+  (brief plus review against doing it inline). Every item's skill still runs in full in-session;
+  design judgment never goes to the worker.
 
 ## Done when
 
