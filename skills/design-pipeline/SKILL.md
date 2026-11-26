@@ -66,7 +66,14 @@ and why:
 
 ## Step 2: Critique
 
-Run every Critique row in `routing.md` against the project's main routes.
+Run every Critique row in `routing.md` against the project's main routes, sending each critic the
+question `routing.md` gives for it.
+
+**Run impeccable's critique the way it specifies: its two assessments in two isolated subagents.**
+Do not fold them into one context to save tokens, even where the user's own instructions favour
+fewer subagents; that is a decided exception, because the critique is the input every later step
+rests on. Its single-context "degraded" run is only for a harness with no subagent tool, and then
+it carries impeccable's banner.
 
 **Judge feel from the running page**, not only from code or a still screenshot. Start it for the
 built-in browser:
@@ -76,12 +83,17 @@ built-in browser:
   open it with `preview_start`;
 - anything else: ask the user how they run it.
 
+**Make the browser pane visible before judging any motion.** A hidden pane runs the page as a
+background tab, which throttles `requestAnimationFrame`, IntersectionObserver and View
+Transitions: animations stall, screenshots show nothing moving, and timing loops time out. If
+the browser's tab listing says the pane is hidden, show it first.
+
 Click through the main flows in the browser (open an item, go back, open a menu or sheet, submit a
 form) and note every hard cut, jump and dead moment. If the page cannot run, say plainly that feel
 was judged from code only.
 
 When a called skill ends by asking the user what to do next, its question belongs to this
-pipeline: for impeccable's critique, close with `Questions skipped: design-pipeline asks in step 3`.
+pipeline, which asks in step 3.
 
 Merge everything into **one** findings table in the format of `references/findings.md`, with
 duplicates folded together. Show it to the user, grouped by layer, highest severity first.
@@ -126,6 +138,11 @@ items; the approved list is the contract for step 6.
 Run each approved item's skill on its target, in order. Respect the protected list from step 3.
 After each item, check the page still runs before starting the next.
 
+**Reload past the cache after every item.** A static server such as `python -m http.server` lets
+the browser keep serving old CSS and JS, so a check can pass or fail against files you already
+changed. In the page, `fetch` each changed asset with `{cache: 'reload'}`, then reload, and
+confirm the change is in what the browser now has before judging it.
+
 Mechanical follow-through on an approved item, such as renaming a token across many files, may go
 to the delegation pipeline when `$HOME/.claude/bin/delegate` exists. Design judgment stays here.
 
@@ -133,12 +150,24 @@ to the delegation pipeline when `$HOME/.claude/bin/delegate` exists. Design judg
 
 Run every Check row in `routing.md` on what changed, except the `DESIGN.md` row, which is step 8:
 `break-ui` on the changed components, a second critique pass on the changed routes. Take before and
-after screenshots of each changed route in the browser. Fix what the check finds in the same
+after screenshots of each changed route in the browser.
+
+`break-ui` expects a data boundary and a dev-only fixture toggle. A static site has neither: there,
+feed the worst-case values straight into the rendered page in the browser (long names, wrapping
+labels, missing images) at a 320px viewport, and add no toggle to the project. Those edits live in
+the browser only. Fix what the check finds in the same
 scope, or report it; do not widen the scope without asking.
 
 ## Step 8: DESIGN.md
 
 impeccable owns the format of `DESIGN.md`. Do not invent a second one.
+
+Before writing it, run `git check-ignore -q DESIGN.md` in the project. If it is ignored, tell the
+user: a `DESIGN.md` nobody else can see does not keep the direction for the next run. Ask whether
+to un-ignore it; do not edit `.gitignore` on your own.
+
+Give impeccable the step 3 answers, and the protected list, as already answered, so its own
+questions skip what the user has said once. Ask only what is still open.
 
 - **Find a direction**: have impeccable's `document` command create it from the finished build.
 - **Refresh or Overhaul**: have impeccable update the sections that changed. Motion rules from
