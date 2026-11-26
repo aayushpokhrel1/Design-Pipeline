@@ -130,12 +130,24 @@ Write an ordered fix list. Each item names the findings it closes and its `fix-w
 **Look and structure come before motion**: motion tuned on a layout that then changes is wasted.
 Findings marked `none` go at the end as open questions.
 
+Mark each item `full` or `values-only`, and show the mark in the list the user approves:
+
+- `full` (the default): run the skill end to end. Any item that decides whether something moves,
+  what moves, or how it behaves when interrupted is `full`, as is anything new starting to animate.
+- `values-only`: the item already fixes what changes and how, and only needs the skill's numbers
+  (a curve, a duration, a threshold, a `touch-action` value) applied to approved code. Read those
+  values from the skill's own `SKILL.md` at that moment, never from memory or an earlier run.
+
+The user can flip any mark. You never change one after approval.
+
 Stop here. **Do not edit anything until the user approves the list.** They may drop or reorder
 items; the approved list is the contract for step 6.
 
 ## Step 6: Apply
 
-Run each approved item's skill on its target, in order. Respect the protected list from step 3.
+Run each approved item's skill on its target, in order, as its mark says. Respect the protected
+list from step 3. If a `values-only` item turns out to need a decision, stop that item and ask the
+user to make it `full`; do not decide it yourself.
 After each item, check the page still runs before starting the next.
 
 **Reload past the cache after every item.** A static server such as `python -m http.server` lets
